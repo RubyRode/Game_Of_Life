@@ -4,12 +4,14 @@
 #include <cstdlib>
 #include <vector>
 #include <string>
+#include <boost/algorithm/string.hpp>
 #include <fstream>
 
 using namespace std;
 class input_parser{
 public:
-    string file_path;
+    string output_path;
+    string input_path;
     string dump;
     bool endgame;
     bool help;
@@ -17,6 +19,7 @@ public:
     int itr;
 
     input_parser();
+    void parse_str(string&);
     input_parser(int argc, char** argv);
     ~input_parser();
     input_parser& operator=(input_parser const&);

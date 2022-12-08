@@ -1,5 +1,6 @@
 
 #include <stdexcept>
+#include <algorithm>
 #include "Input_parser.h"
 
 input_parser::input_parser(int argc, char **argv) {
@@ -7,10 +8,19 @@ input_parser::input_parser(int argc, char **argv) {
         this->tokens.emplace_back(string(argv[i]));
     }
     this->endgame = false;
+    if (argc > 1){
+        this->input_path = this->tokens[0];
+    }
     this->help = false;
     this->tick = 0;
     this->itr = 0;
     this->dump = "";
+}
+
+void input_parser::parse_str(string& str) {
+    input_parser tmp;
+    boost::split(tmp.tokens,str,boost::is_any_of(" "));
+    *this = parsed_args(tmp);
 }
 
 const string &input_parser::get_option(const string &option) {
@@ -40,17 +50,20 @@ input_parser& input_parser::parsed_args(input_parser &prs) {
         prs.itr = stoi(tmp);
     }
     if (prs.option_exists("-in")){
-        prs.file_path = prs.get_option("-in");
+        prs.output_path = prs.get_option("-in");
     } else if (prs.option_exists("--input=")){
-        prs.file_path = prs.get_option("--input=");
+        prs.output_path = prs.get_option("--input=");
     }
     if (prs.option_exists("-o")){
-        prs.file_path = prs.get_option("-o");
+        prs.output_path = prs.get_option("-o");
     } else if (prs.option_exists("--output=")){
-        prs.file_path = prs.get_option("--output=");
+        prs.output_path = prs.get_option("--output=");
     }
     if (prs.option_exists("dump")){
         prs.dump = prs.get_option("dump");
+    }
+    if (prs.option_exists("tick")){
+        prs.tick = stoi(prs.get_option("tick"));
     }
     if (prs.option_exists("help")){
         prs.help = true;
@@ -67,7 +80,7 @@ input_parser::input_parser() {
     this->tick = 0;
     this->itr = 0;
     this->dump = "";
-    this->file_path = "";
+    this->output_path = "";
 }
 
 input_parser &input_parser::clear_parser(input_parser &prs) {
