@@ -7,7 +7,7 @@ using namespace std;
 class Rule{
 public:
     string str_rule;
-    int birth;
+    string birth;
     string survival;
 
     Rule();
